@@ -1,80 +1,101 @@
 let matrix = [
-    ['P', '1', "0", '0', "1", '0', "1", '0', "0", '0'],
-    ['0', '0', "0", '1', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '1', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '1', "0", '0', "0", '1', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '1', "0", '0', "0", '0', "0", '0'],
-    ['1', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '1', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "1", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '0', "0", '0', "0", '0'],
-    ['0', '0', "0", '0', "0", '1', "0", '0', "0", '0'],
+    "1111111111111111111".split(""),
+    "1000000000010100001".split(""),
+    "1111101111010101001".split(""),
+    "1000001000010100001".split(""),
+    "1011111011110000001".split(""),
+    "1010000010110110001".split(""),
+    "1010111110110100111".split(""),
+    "1010000000000100001".split(""),
+    "1P11111111111110101".split(""),
+    "1010001010001000101".split(""),
+    "1010001000001000111".split(""),
+    "1011100000100000001".split(""),
+    "1000110111111111001".split(""),
+    "1010010000000001101".split(""),
+    "1011011111111101111".split(""),
+    "1010000000000101101".split(""),
+    "1011111111100100001".split(""),
+    "10100010001001111F1".split(""),
+    "1000100010110010001".split(""),
+    "1111111111111111111".split("")
 ]
 
-function onMove(event) {
-    const coordsPlayer = document.getElementById('player');
-    if (event.code == "KeyW") {
-        if (coordsPlayer.style.top != '0px') {
-            coordsPlayer.style.top = (parseInt(coordsPlayer.style.top || getComputedStyle(coordsPlayer)['left'], 10) - 25) + 'px';
+let coordsPlayer = {
+    "X":1,
+    "Y":8
+}
+const pointElem = document.querySelector("h1")
+const play = document.querySelector("#player")
+play.style.top = String(coordsPlayer["Y"] * 25)+"px";
+play.style.left = String(coordsPlayer["X"] * 25)+"px";
+const field = document.querySelector(".maze-field")
+for (line in matrix){
+    for (cell in matrix[line]){
+        if (matrix[line][cell] == "1"){
+            let elem = document.createElement("div");
+            elem.classList.add("maze-block");
+            elem.style.top = String(line*25)+"px";
+            elem.style.left = String(cell*25)+"px";
+            field.append(elem);
         }
-    } else if (event.code == 'KeyD') {
-        if (coordsPlayer.style.left != '475px') {
-            coordsPlayer.style.left = (parseInt(coordsPlayer.style.left || getComputedStyle(coordsPlayer)['left'], 10) + 25) + 'px';
-        }
-    } else if (event.code == 'KeyA') {
-        if (coordsPlayer.style.left != '0px') {
-            coordsPlayer.style.left = (parseInt(coordsPlayer.style.left || getComputedStyle(coordsPlayer)['left'], 10) - 25) + 'px';
-        }
-    } else if (event.code == 'KeyS') {
-        if (coordsPlayer.style.top != '475px') {
-            coordsPlayer.style.top = (parseInt(coordsPlayer.style.top || getComputedStyle(coordsPlayer)['left'], 10) + 25) + 'px';
+        else if (matrix[line][cell] == "F"){
+            let elemFinish = document.createElement("div");
+            elemFinish.classList.add("finish");
+            elemFinish.style.top = String(line*25)+"px";
+            elemFinish.style.left = String(cell*25)+"px";
+            field.append(elemFinish);
         }
     }
 }
-function draw() {
-    let divElQ = document.querySelector('.maze-field');
-    for (let i = 0; i < matrix.length; i++) {
-        let divEl = document.createElement("div");
-        divEl.style.width = '20px';
-        divEl.style.height = '20px';
-        divEl.style.backgroundColor = 'white';
-        divElQ.append(divEl);
-    }
-}
-const drawMaze = (maze) => {
-    let divElQ = document.querySelector(".maze-field");
-    if (maze) {
-        for (let i = 0; i < maze.length; i++) {
-            let divEl = document.createElement("div");
-            divEl.style.width = '20px';
-            divEl.style.height = '20px';
-            switch (maze.items[0][1]) {
-                case 1:
-                    divEl.setAttribute("class", "wall");
-                    divEl.style.backgroundColor = 'green';
 
-                    break;
-                case "W":
-                    divEl.setAttribute("id", "win");
-                    divEl.style.backgroundColor = 'white';
-                    break;
-                case "P":
-                    divEl.setAttribute('id', 'spawnplayer');
-                    divEl.style.opacity = 0;
+
+function checkFinish(){
+    if (matrix[coordsPlayer["Y"]][coordsPlayer["X"]] != "F") {
+        matrix[coordsPlayer["Y"]][coordsPlayer["X"]] = "P";}        
+    else{
+        pointElem.innerHTML = "Points 1"
+        field.removeChild(document.querySelector(".finish"))
+        document.removeEventListener('keydown',movePlayer)
+        }
+    
+}
+function movePlayer(event){
+    if (event.code == 'KeyW'){
+        if (matrix[coordsPlayer["Y"] - 1][coordsPlayer["X"]] != 1){
+            matrix[coordsPlayer["Y"]][coordsPlayer["X"]] = "0";
+            coordsPlayer["Y"] -= 1;
+            checkFinish()
+
+        }
+    }
+    else if (event.code == 'KeyS'){
+        if (matrix[coordsPlayer["Y"] + 1][coordsPlayer["X"]] != 1){
+            matrix[coordsPlayer["Y"]][coordsPlayer["X"]] = "0";
+            coordsPlayer["Y"] += 1;
+            checkFinish()
+
+        }
+    }
+    else if (event.code == 'KeyA'){
+        if (matrix[coordsPlayer["Y"]][coordsPlayer["X"] - 1] != 1){
+            matrix[coordsPlayer["Y"]][coordsPlayer["X"]] = "0";
+            coordsPlayer["X"] -= 1;
+            checkFinish()
+
+        }
+    }
+    else if (event.code == 'KeyD'){
+        if (matrix[coordsPlayer["Y"]][coordsPlayer["X"] + 1] != 1){
+            matrix[coordsPlayer["Y"]][coordsPlayer["X"]] = "0";
+            coordsPlayer["X"] += 1;
+            checkFinish()
 
             }
         }
-    }
+
+    
+    play.style.top = String(coordsPlayer["Y"] * 25)+"px";
+    play.style.left = String(coordsPlayer["X"] * 25)+"px";
 }
-drawMaze(matrix);
-document.addEventListener('keydown', onMove);
+document.addEventListener('keydown',movePlayer)
